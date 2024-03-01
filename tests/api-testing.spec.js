@@ -25,8 +25,8 @@ test('GET anapioficeandfire api', async ({ request }) => {
     }));
 });
 
-// This test is currently skipped. See FIXME notes within tests.
-// fixme() is used to skip tests
+// This test is currently skipped. See FIXME notes inside test.
+// fixme() is used to skip test
 test.fixme('POST restful-api.dev api', async ({ request }) => {
   const postObject = await request.post("https://api.restful-api.dev/objects", {
     data: {
