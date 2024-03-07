@@ -26,9 +26,9 @@ test('GET anapioficeandfire api', async ({ request }) => {
 });
 
 // This test is currently skipped. See FIXME notes inside test.
-// fixme() is used to skip test
-test.fixme('POST restful-api.dev api', async ({ request }) => {
-  const postObject = await request.post("https://api.restful-api.dev/objects", {
+// fixme() is used to skip test.
+test('POST restful-api.dev api', async ({ request }) => {
+  const responseBody = await request.post("https://api.restful-api.dev/objects", {
     data: {
       name: "Apple MacBook Pro 16",
       data: {
@@ -39,20 +39,12 @@ test.fixme('POST restful-api.dev api', async ({ request }) => {
       }
    }
   });
-  expect(postObject.ok()).toBeTruthy();
-  expect(postObject.status()).toBe(200);
-  expect(await postObject.json()).toEqual(expect.objectContaining({
-    // FIXME: 2 things:
-    // 1. id is generated with each POST call so it changes.
-    //    Need to find a way to make this value dynamic.
-    //    Maybe just check to see if it is a String?
-    // 2. createdAt timestamp does not quite match because of the time it takes for the 
-    //    request to be called and the response to be recieved. 
-    //    Also, the formatting is slightly off.
-    //    Example:
-    //      expected: "createdAt": "2024-02-29T04:11:00.000Z",
-    //      received: "createdAt": "2024-02-29T04:11:00.355+00:00",
-    id: "ff8081818de9f8bf018df29614f2072d",
+  expect(responseBody.ok()).toBeTruthy();
+  expect(responseBody.status()).toBe(200);
+  expect(await responseBody.json()).toEqual(expect.objectContaining({
+    // The id: is returned as some dynamic string so to best option is to
+    // confirm that the value returned here is a String.
+    id: expect.any(String),
     name: "Apple MacBook Pro 16",
     data: {
         year: 2019,
@@ -60,7 +52,20 @@ test.fixme('POST restful-api.dev api', async ({ request }) => {
         CPU_model: "Intel Core i9",
         Hard_disk_size: "1 TB"
     }, 
-    createdAt: new Date(Date()).toJSON()
-    // createdAt: "2024-02-29T01:43:21.657+00:00"
+    // I can't get the expected timestamp format to match what is actually coming back
+    // AND having a hard time figuring out how to "freeze" time during the test.
+    // Example:
+    //   expected: "createdAt": "2024-02-29T04:11:00.000Z",
+    //   received: "createdAt": "2024-02-29T04:11:00.355+00:00",
+    // Using expect.any(String) to confirm what is returned is a String because
+    // the timestamp for createdAt is a String in the JSON.
+    createdAt: expect.any(String)
   }));
+
+  // A second way to do the assertions in the reponse body.
+  // const responseBody = await postObject.json();
+  // expect(responseBody.data).toHaveProperty("year", 2019);
+  // expect(responseBody.data).toHaveProperty("price", 1849.99);
+  // expect(responseBody.data).toHaveProperty("CPU_model", "Intel Core i9");
+  // expect(responseBody.data).toHaveProperty("Hard_disk_size", "1 TB");
 });
