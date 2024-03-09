@@ -25,8 +25,6 @@ test('GET anapioficeandfire api', async ({ request }) => {
     }));
 });
 
-// This test is currently skipped. See FIXME notes inside test.
-// fixme() is used to skip test.
 test('POST restful-api.dev api', async ({ request }) => {
   const responseBody = await request.post("https://api.restful-api.dev/objects", {
     data: {
@@ -68,4 +66,35 @@ test('POST restful-api.dev api', async ({ request }) => {
   // expect(responseBody.data).toHaveProperty("price", 1849.99);
   // expect(responseBody.data).toHaveProperty("CPU_model", "Intel Core i9");
   // expect(responseBody.data).toHaveProperty("Hard_disk_size", "1 TB");
+});
+
+test('PUT dummyjson.com api', async ({ request }) => {
+  const responseBody = await request.put("https://dummyjson.com/products/1", {
+    data: {
+      title: "iPhone 12 Pro",
+      price: 999,
+      rating: 4.9,
+      stock: 100
+    }
+  });
+  expect(responseBody.ok()).toBeTruthy();
+  expect(responseBody.status()).toBe(200);
+  expect(await responseBody.json()).toEqual({
+    id: 1,
+    title: "iPhone 12 Pro",
+    description: "An apple mobile which is nothing like apple",
+    price: 999,
+    rating: 4.9,
+    stock: 100,
+    brand: "Apple",
+    category: "smartphones",
+    thumbnail: "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
+    images: [
+      "https://cdn.dummyjson.com/product-images/1/1.jpg",
+      "https://cdn.dummyjson.com/product-images/1/2.jpg",
+      "https://cdn.dummyjson.com/product-images/1/3.jpg",
+      "https://cdn.dummyjson.com/product-images/1/4.jpg",
+      "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg"
+    ]
+  });
 });
